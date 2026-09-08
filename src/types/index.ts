@@ -28,6 +28,7 @@ export interface SqlExecutionRequest {
 
 export interface SqlExecutionSuccess {
 	success: true;
+	passed?: boolean;
 	rows: Record<string, unknown>[];
 	columns: string[];
 	rowCount: number;

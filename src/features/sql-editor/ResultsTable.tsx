@@ -28,7 +28,13 @@ export function ResultsTable({ result }: ResultsTableProps) {
 			className="space-y-3"
 		>
 			<div className="flex items-center gap-3">
-				<Badge variant="success">Success</Badge>
+				{result.passed === true ? (
+					<Badge variant="success">Passed</Badge>
+				) : result.passed === false ? (
+					<Badge variant="danger">Failed</Badge>
+				) : (
+					<Badge variant="success">Success</Badge>
+				)}
 				<span className="text-surface-400 text-xs">
 					{result.rowCount} row{result.rowCount !== 1 ? "s" : ""} in{" "}
 					{result.executionTimeMs}ms

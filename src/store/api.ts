@@ -11,7 +11,7 @@ export const api = createApi({
   reducerPath: "api",
 	
 	baseQuery: fetchBaseQuery({
-		baseUrl: import.meta.env.VITE_API_BASE_URL,
+		baseUrl: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000",
 		credentials: "include",
   }),
 	
@@ -23,25 +23,26 @@ export const api = createApi({
 			{ page?: number; limit?: number }
 		>({
 			query: ({ page = 1, limit = 20 } = {}) =>
-				`api/v1/assignments?page=${page}&limit=${limit}`,
+				`/api/v1/assignments?page=${page}&limit=${limit}`,
 			providesTags: ["Assignments"],
 		}),
 
 		getAssignmentById: builder.query<{ assignment: AssignmentDetail }, string>({
-			query: (id) => `/assignments/${id}`,
+			query: (id) => `/api/v1/assignments/${id}`,
 			providesTags: (_result, _error, id) => [{ type: "Assignment", id }],
 		}),
 
 		executeSql: builder.mutation<{ taskId: string }, SqlExecutionRequest>({
 			query: (body) => ({
-				url: "/assignments/client-sql-code-run/execute",
+				url: "/api/v1/assignments/client-sql-code-run/execute",
 				method: "POST",
 				body,
 			}),
 		}),
 
 		getJobStatus: builder.query<JobStatus, string>({
-			query: (taskId) => `/assignments/client-sql-code-run/status/${taskId}`,
+			query: (taskId) =>
+				`/api/v1/assignments/client-sql-code-run/status/${taskId}`,
 			keepUnusedDataFor: 0,
 		}),
 
@@ -50,7 +51,7 @@ export const api = createApi({
 			CreateAssignmentPayload
 		>({
 			query: (body) => ({
-				url: "/admin/assignments",
+				url: "/api/v1/admin/assignments",
 				method: "POST",
 				body,
 			}),
