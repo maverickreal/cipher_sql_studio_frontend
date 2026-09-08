@@ -19,7 +19,7 @@ const cardVariants = {
 	show: { 
 		opacity: 1, 
 		y: 0,
-		transition: { type: "spring", bounce: 0.1, duration: 0.6 }
+		transition: { type: "spring" as const, bounce: 0.1, duration: 0.6 }
 	},
 };
 
@@ -103,7 +103,6 @@ export function AssignmentListPage() {
 	const { data, isLoading, isError, error } = useGetAssignmentsQuery({
 		page,
 		limit: 20,
-		difficulty: currentDifficulty !== "All" ? currentDifficulty.toLowerCase() : undefined,
 	});
 
 	const handleDifficultyChange = (level: Difficulty) => {
@@ -197,7 +196,7 @@ export function AssignmentListPage() {
 							<Button
 								variant="secondary"
 								size="sm"
-								disabled={data.assignments.length < 20}
+								disabled={(data?.assignments.length ?? 0) < 20}
 								onClick={() => {
 									const params = new URLSearchParams(searchParams);
 									params.set("page", String(page + 1));
