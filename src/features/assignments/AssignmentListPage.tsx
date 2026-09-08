@@ -70,6 +70,7 @@ function DifficultyGauge({
 
 					return (
 						<button
+							type="button"
 							key={level}
 							onClick={() => onChange(level)}
 							className="relative z-10 flex-1 py-1.5 outline-none"
