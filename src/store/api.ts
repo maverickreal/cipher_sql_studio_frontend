@@ -8,15 +8,15 @@ import type {
 } from "../types";
 
 export const api = createApi({
-  reducerPath: "api",
-	
+	reducerPath: "api",
+
 	baseQuery: fetchBaseQuery({
 		baseUrl: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000",
 		credentials: "include",
-  }),
-	
-  tagTypes: ["Assignments", "Assignment"],
-	
+	}),
+
+	tagTypes: ["Assignments", "Assignment"],
+
 	endpoints: (builder) => ({
 		getAssignments: builder.query<
 			{ assignments: Assignment[] },
@@ -46,6 +46,24 @@ export const api = createApi({
 			keepUnusedDataFor: 0,
 		}),
 
+		getLastSql: builder.query<
+			{ userSql: string | null; updatedAt?: string },
+			string
+		>({
+			query: (assignmentId) => `/api/v1/assignments/${assignmentId}/last-sql`,
+		}),
+
+		saveLastSql: builder.mutation<
+			{ success: boolean },
+			{ assignmentId: string; userSql: string }
+		>({
+			query: ({ assignmentId, userSql }) => ({
+				url: `/api/v1/assignments/${assignmentId}/last-sql`,
+				method: "POST",
+				body: { userSql },
+			}),
+		}),
+
 		createAssignment: builder.mutation<
 			{ assignmentId: string; jobId: string },
 			CreateAssignmentPayload
@@ -65,5 +83,7 @@ export const {
 	useGetAssignmentByIdQuery,
 	useExecuteSqlMutation,
 	useGetJobStatusQuery,
+	useGetLastSqlQuery,
+	useSaveLastSqlMutation,
 	useCreateAssignmentMutation,
 } = api;

@@ -74,8 +74,11 @@ export function Navbar() {
 									Admin
 								</Link>
 							)}
-							<span className="hidden text-sm text-surface-400 sm:block">
-								{user.email}
+							<span
+								className="hidden text-sm text-surface-200 sm:block"
+								title={user.email}
+							>
+								{user.name || user.email}
 							</span>
 							<Button variant="ghost" size="sm" onClick={handleSignOut}>
 								Sign Out

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { authClient } from "../../services/authClient";
+import { SocialSignInButtons } from "./SocialSignInButtons";
 
 const signUpSchema = z.object({
 	name: z.string().min(1, "Name is required"),
@@ -68,7 +69,17 @@ export function SignUpPage() {
 					Start your SQL learning journey
 				</p>
 
-				<form onSubmit={handleSubmit} className="mt-8 space-y-4">
+				<div className="mt-8">
+					<SocialSignInButtons />
+				</div>
+
+				<div className="my-6 flex items-center gap-3" aria-hidden="true">
+					<span className="h-px flex-1 bg-surface-800" />
+					<span className="text-xs text-surface-500">or continue with email</span>
+					<span className="h-px flex-1 bg-surface-800" />
+				</div>
+
+				<form onSubmit={handleSubmit} className="space-y-4">
 					<Input
 						label="Name"
 						type="text"

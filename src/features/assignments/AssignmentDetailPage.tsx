@@ -6,7 +6,7 @@ import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { useAuth } from "../../hooks/useAuth";
 import type { RootState } from "../../store";
-import { useGetAssignmentByIdQuery } from "../../store/api";
+import { useGetAssignmentByIdQuery, useGetLastSqlQuery } from "../../store/api";
 import { ResultsTable } from "../sql-editor/ResultsTable";
 import { SqlEditor } from "../sql-editor/SqlEditor";
 
@@ -24,6 +24,10 @@ export function AssignmentDetailPage() {
 	});
 
 	const user = useSelector((state: RootState) => state.auth.user);
+
+	const { data: lastSql } = useGetLastSqlQuery(id ?? "", {
+		skip: !id || !user,
+	});
 	const execution = useSelector((state: RootState) => state.execution);
 	const sessionReady = useSelector(
 		(state: RootState) => state.auth.sessionReady,
@@ -109,7 +113,11 @@ export function AssignmentDetailPage() {
 								<h2 className="mb-4 font-semibold text-lg text-white">
 									Your Solution
 								</h2>
-								<SqlEditor assignment={data.assignment} />
+								<SqlEditor
+									key={data.assignment._id}
+									assignment={data.assignment}
+									initialSql={lastSql?.userSql ?? null}
+								/>
 
 								{execution.phase === "done" && execution.result && (
 									<div className="mt-6">

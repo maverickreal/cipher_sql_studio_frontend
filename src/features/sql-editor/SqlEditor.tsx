@@ -7,78 +7,52 @@ import {
 	keymap,
 	lineNumbers,
 } from "@codemirror/view";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../components/ui/Button";
+import { useJobStatusStream } from "../../hooks/useJobStatusStream";
 import type { AppDispatch, RootState } from "../../store";
-import { useExecuteSqlMutation, useGetJobStatusQuery } from "../../store/api";
+import { useExecuteSqlMutation, useSaveLastSqlMutation } from "../../store/api";
 import type { Assignment } from "../../types";
 import { getErrorMessage } from "../../utils/errors";
 import {
-	executionCompleted,
 	executionFailed,
 	executionStarted,
 	resetExecution,
 } from "./executionSlice";
 
+const DEFAULT_SQL = "SELECT * FROM users LIMIT 5;";
+
 interface SqlEditorProps {
 	assignment: Assignment;
+	initialSql?: string | null;
 }
 
-export function SqlEditor({ assignment }: SqlEditorProps) {
+export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 	const dispatch = useDispatch<AppDispatch>();
 	const editorRef = useRef<HTMLDivElement>(null);
 	const viewRef = useRef<EditorView | null>(null);
+	const [userEdited, setUserEdited] = useState(false);
+	const initialDocRef = useRef(initialSql ?? DEFAULT_SQL);
 
 	const { phase, taskId } = useSelector((state: RootState) => state.execution);
 
 	const [executeSql, { isLoading: isExecuting }] = useExecuteSqlMutation();
+	const [saveLastSql] = useSaveLastSqlMutation();
 
-	const { data: jobStatus, error: pollingError } = useGetJobStatusQuery(
-		taskId ?? "",
-		{
-			skip: !taskId || phase !== "polling",
-			pollingInterval: 1000,
-		},
-	);
-
-	useEffect(() => {
-		if (jobStatus && phase === "polling") {
-			if (jobStatus.status === "completed" && jobStatus.result) {
-				dispatch(executionCompleted(jobStatus.result));
-			} else if (jobStatus.status === "failed") {
-				dispatch(
-					executionFailed(
-						jobStatus.result && "error" in jobStatus.result
-							? jobStatus.result.error
-							: "SQL execution failed",
-					),
-				);
-			}
-		}
-	}, [jobStatus, phase, dispatch]);
-
-	useEffect(() => {
-		if (pollingError && phase === "polling") {
-			const message = getErrorMessage(
-				pollingError,
-				"Failed to check execution status",
-			);
-			dispatch(executionFailed(message));
-		}
-	}, [pollingError, phase, dispatch]);
+	useJobStatusStream(phase === "polling" ? (taskId ?? null) : null);
 
 	useEffect(() => {
 		if (!editorRef.current) return;
 
 		const updateListener = EditorView.updateListener.of((update) => {
 			if (update.docChanged) {
-				// state is read via getValue when running
+				setUserEdited(true);
 			}
 		});
 
 		const view = new EditorView({
-			doc: "SELECT * FROM users LIMIT 5;",
+			doc: initialDocRef.current,
 			extensions: [
 				lineNumbers(),
 				highlightActiveLine(),
@@ -108,6 +82,17 @@ export function SqlEditor({ assignment }: SqlEditorProps) {
 		};
 	}, []);
 
+	useEffect(() => {
+		const view = viewRef.current;
+		if (!view || !initialSql || userEdited) return;
+		const current = view.state.doc.toString();
+		if (current !== initialSql) {
+			view.dispatch({
+				changes: { from: 0, to: current.length, insert: initialSql },
+			});
+		}
+	}, [initialSql, userEdited]);
+
 	const handleRun = useCallback(async () => {
 		if (!viewRef.current) return;
 
@@ -124,11 +109,15 @@ export function SqlEditor({ assignment }: SqlEditorProps) {
 			}).unwrap();
 
 			dispatch(executionStarted(result.taskId));
+
+			saveLastSql({ assignmentId: assignment._id, userSql }).catch(() => {
+				// persistence is best-effort; the SQL already executed
+			});
 		} catch (err) {
 			const message = getErrorMessage(err, "Failed to execute SQL");
 			dispatch(executionFailed(message));
 		}
-	}, [assignment, executeSql, dispatch]);
+	}, [assignment, executeSql, saveLastSql, dispatch]);
 
 	return (
 		<div className="space-y-4">
