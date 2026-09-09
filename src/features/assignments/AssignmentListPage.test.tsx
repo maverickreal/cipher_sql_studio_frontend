@@ -94,18 +94,78 @@ describe("AssignmentListPage", () => {
 		);
 	});
 
-	it("passes mode as query param when mode dropdown changes", () => {
-		renderPage();
+	it("passes origin as query param when origin dropdown changes", () => {
+	  renderPage();
 
-		const modeSelect = screen.getByLabelText("Mode");
-		fireEvent.change(modeSelect, { target: { value: "write" } });
+	  const originSelect = screen.getByLabelText("Origin");
+	  fireEvent.change(originSelect, { target: { value: "community" } });
 
-		expect(vi.mocked(useGetAssignmentsQuery)).toHaveBeenLastCalledWith(
-			expect.objectContaining({
-				mode: "write",
-				page: 1,
-			}),
-		);
+	  expect(vi.mocked(useGetAssignmentsQuery)).toHaveBeenLastCalledWith(
+	    expect.objectContaining({
+	      origin: "community",
+	      page: 1,
+	    }),
+	  );
+	});
+
+	it("shows community badge on community assignment", () => {
+	  const communityAssignment = {
+	    _id: "a2",
+	    title: "Community Problem",
+	    description: "A community-contributed problem",
+	    difficulty: "easy",
+	    mode: "read",
+	    origin: "community",
+	    contributor: "contributorhandle",
+	    createdAt: "2026-01-01T00:00:00.000Z",
+	  };
+
+	  vi.mocked(useGetAssignmentsQuery).mockReturnValue({
+	    data: {
+	      assignments: [communityAssignment],
+	      page: 1,
+	      limit: 20,
+	      total: 1,
+	      totalPages: 1,
+	    },
+	    isLoading: false,
+	    isError: false,
+	    error: undefined,
+	  } as unknown as ReturnType<typeof useGetAssignmentsQuery>);
+
+	  renderPage();
+
+	  expect(screen.getByText("Community")).toBeTruthy();
+	  expect(screen.getByText("by contributorhandle")).toBeTruthy();
+	});
+
+	it("does not show community badge on first-party assignment", () => {
+	  const firstPartyAssignment = {
+	    _id: "a3",
+	    title: "First Party Problem",
+	    description: "A first-party problem",
+	    difficulty: "easy",
+	    mode: "read",
+	    origin: "first-party",
+	    createdAt: "2026-01-01T00:00:00.000Z",
+	  };
+
+	  vi.mocked(useGetAssignmentsQuery).mockReturnValue({
+	    data: {
+	      assignments: [firstPartyAssignment],
+	      page: 1,
+	      limit: 20,
+	      total: 1,
+	      totalPages: 1,
+	    },
+	    isLoading: false,
+	    isError: false,
+	    error: undefined,
+	  } as unknown as ReturnType<typeof useGetAssignmentsQuery>);
+
+	  renderPage();
+
+	  expect(screen.queryByText("Community")).toBeNull();
 	});
 
 	it("uses totalPages from response in pager and handles page navigation", () => {

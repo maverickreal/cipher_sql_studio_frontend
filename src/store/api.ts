@@ -8,13 +8,14 @@ import type {
 } from "../types";
 
 export interface AssignmentsQueryParams {
-	page?: number;
-	limit?: number;
-	q?: string;
-	difficulty?: string;
-	mode?: string;
-	sort?: "createdAt" | "title";
-	order?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+  q?: string;
+  difficulty?: string;
+  mode?: string;
+  origin?: string;
+  sort?: "createdAt" | "title";
+  order?: "asc" | "desc";
 }
 
 export interface AssignmentsResponse {
@@ -62,27 +63,29 @@ export const api = createApi({
 
 	endpoints: (builder) => ({
 		getAssignments: builder.query<AssignmentsResponse, AssignmentsQueryParams>({
-			query: ({
-				page = 1,
-				limit = 20,
-				q,
-				difficulty,
-				mode,
-				sort,
-				order,
-			} = {}) => {
-				const params = new URLSearchParams({
-					page: String(page),
-					limit: String(limit),
-				});
-				if (q?.trim()) params.set("q", q.trim());
-				if (difficulty) params.set("filter[difficulty]", difficulty);
-				if (mode) params.set("filter[mode]", mode);
-				if (sort) params.set("sort", sort);
-				if (order) params.set("order", order);
-				return `/api/v1/assignments?${params.toString()}`;
-			},
-			providesTags: ["Assignments"],
+		  query: ({
+		    page = 1,
+		    limit = 20,
+		    q,
+		    difficulty,
+		    mode,
+		    origin,
+		    sort,
+		    order,
+		  } = {}) => {
+		    const params = new URLSearchParams({
+		      page: String(page),
+		      limit: String(limit),
+		    });
+		    if (q?.trim()) params.set("q", q.trim());
+		    if (difficulty) params.set("filter[difficulty]", difficulty);
+		    if (mode) params.set("filter[mode]", mode);
+		    if (origin) params.set("filter[origin]", origin);
+		    if (sort) params.set("sort", sort);
+		    if (order) params.set("order", order);
+		    return `/api/v1/assignments?${params.toString()}`;
+		  },
+		  providesTags: ["Assignments"],
 		}),
 
 		getAssignmentById: builder.query<{ assignment: AssignmentDetail }, string>({
