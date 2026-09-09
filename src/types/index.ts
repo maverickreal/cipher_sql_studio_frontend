@@ -3,18 +3,18 @@ export type Difficulty = "easy" | "medium" | "hard";
 export type AccessMode = "read" | "write";
 
 export interface Assignment {
-  _id: string;
-  title: string;
-  description: string;
-  difficulty: Difficulty;
-  mode: AccessMode;
-  sampleInput: string[];
-  sampleOutput: string;
-  pgSchemaReady: boolean;
-  createdAt: string;
-  updatedAt: string;
-  origin?: "first-party" | "community";
-  contributor?: string;
+	_id: string;
+	title: string;
+	description: string;
+	difficulty: Difficulty;
+	mode: AccessMode;
+	sampleInput: string[];
+	sampleOutput: string;
+	pgSchemaReady: boolean;
+	createdAt: string;
+	updatedAt: string;
+	origin?: "first-party" | "community";
+	contributor?: string;
 }
 
 export interface AssignmentDetail extends Assignment {

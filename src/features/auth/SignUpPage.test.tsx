@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+	cleanup,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { authClient } from "../../services/authClient";
@@ -45,8 +51,12 @@ describe("SignUpPage", () => {
 		fireEvent.change(screen.getByLabelText("Password"), {
 			target: { value: "short" },
 		});
-		fireEvent.submit(screen.getByRole("button", { name: "Create Account" }).closest("form")!);
-		expect(await screen.findByText("Must be at least 8 characters")).toBeTruthy();
+		fireEvent.submit(
+			screen.getByRole("button", { name: "Create Account" }).closest("form")!,
+		);
+		expect(
+			await screen.findByText("Must be at least 8 characters"),
+		).toBeTruthy();
 		expect(authClient.signUp.email).not.toHaveBeenCalled();
 	});
 
@@ -65,7 +75,9 @@ describe("SignUpPage", () => {
 		fireEvent.change(screen.getByLabelText("Password"), {
 			target: { value: "longenough" },
 		});
-		fireEvent.submit(screen.getByRole("button", { name: "Create Account" }).closest("form")!);
+		fireEvent.submit(
+			screen.getByRole("button", { name: "Create Account" }).closest("form")!,
+		);
 		await waitFor(() => {
 			expect(authClient.signUp.email).toHaveBeenCalledWith({
 				name: "Ada",

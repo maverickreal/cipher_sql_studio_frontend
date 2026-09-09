@@ -7,6 +7,7 @@ import { Button } from "../../components/ui/Button";
 import { useAuth } from "../../hooks/useAuth";
 import type { RootState } from "../../store";
 import { useGetAssignmentByIdQuery, useGetLastSqlQuery } from "../../store/api";
+import type { AssignmentDetail } from "../../types";
 import { ResultsTable } from "../sql-editor/ResultsTable";
 import { SqlEditor } from "../sql-editor/SqlEditor";
 
@@ -15,6 +16,20 @@ const difficultyVariant: Record<string, "success" | "warning" | "danger"> = {
 	medium: "warning",
 	hard: "danger",
 };
+
+function CommunityInfo({ assignment }: { assignment: AssignmentDetail }) {
+	if (assignment.origin !== "community") return null;
+	return (
+		<div className="mt-3 flex items-center gap-3">
+			<Badge variant="success">Community</Badge>
+			{assignment.contributor && (
+				<span className="text-sm text-surface-400">
+					by <span className="text-emerald-400">{assignment.contributor}</span>
+				</span>
+			)}
+		</div>
+	);
+}
 
 export function AssignmentDetailPage() {
 	useAuth();
@@ -71,6 +86,7 @@ export function AssignmentDetailPage() {
 											: "Read & Write"}
 									</Badge>
 								</div>
+								<CommunityInfo assignment={data.assignment} />
 							</div>
 						</div>
 

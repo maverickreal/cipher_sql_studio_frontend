@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+	cleanup,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { authClient } from "../../services/authClient";
@@ -40,7 +46,9 @@ describe("SignInPage", () => {
 		fireEvent.change(screen.getByLabelText("Password"), {
 			target: { value: "secret" },
 		});
-		fireEvent.submit(screen.getByRole("button", { name: "Sign In" }).closest("form")!);
+		fireEvent.submit(
+			screen.getByRole("button", { name: "Sign In" }).closest("form")!,
+		);
 		expect(await screen.findByText("Invalid email address")).toBeTruthy();
 		expect(authClient.signIn.email).not.toHaveBeenCalled();
 	});
@@ -57,7 +65,9 @@ describe("SignInPage", () => {
 		fireEvent.change(screen.getByLabelText("Password"), {
 			target: { value: "secret" },
 		});
-		fireEvent.submit(screen.getByRole("button", { name: "Sign In" }).closest("form")!);
+		fireEvent.submit(
+			screen.getByRole("button", { name: "Sign In" }).closest("form")!,
+		);
 		await waitFor(() => {
 			expect(authClient.signIn.email).toHaveBeenCalledWith({
 				email: "learner@example.com",
@@ -78,7 +88,9 @@ describe("SignInPage", () => {
 		fireEvent.change(screen.getByLabelText("Password"), {
 			target: { value: "wrong" },
 		});
-		fireEvent.submit(screen.getByRole("button", { name: "Sign In" }).closest("form")!);
+		fireEvent.submit(
+			screen.getByRole("button", { name: "Sign In" }).closest("form")!,
+		);
 		expect(await screen.findByText("Invalid credentials")).toBeTruthy();
 	});
 });

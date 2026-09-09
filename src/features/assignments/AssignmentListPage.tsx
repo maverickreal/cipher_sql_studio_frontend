@@ -143,15 +143,15 @@ export function AssignmentListPage() {
 	const currentQ = searchParams.get("q") ?? "";
 
 	const { data, isLoading, isError, error } = useGetAssignmentsQuery({
-	  page,
-	  limit: 20,
-	  q: currentQ.trim() ? currentQ.trim() : undefined,
-	  difficulty:
-	    currentDifficulty === "All" ? undefined : currentDifficulty.toLowerCase(),
-	  mode: currentMode === "All" ? undefined : currentMode,
-	  origin: currentOrigin === "All" ? undefined : currentOrigin,
-	  sort: SORTS.includes(currentSort) ? currentSort : "createdAt",
-	  order: ORDERS.includes(currentOrder) ? currentOrder : "desc",
+		page,
+		limit: 20,
+		q: currentQ.trim() ? currentQ.trim() : undefined,
+		difficulty:
+			currentDifficulty === "All" ? undefined : currentDifficulty.toLowerCase(),
+		mode: currentMode === "All" ? undefined : currentMode,
+		origin: currentOrigin === "All" ? undefined : currentOrigin,
+		sort: SORTS.includes(currentSort) ? currentSort : "createdAt",
+		order: ORDERS.includes(currentOrder) ? currentOrder : "desc",
 	});
 
 	const setPageReset = (patch: Record<string, string | null>) =>
@@ -162,11 +162,11 @@ export function AssignmentListPage() {
 	};
 
 	const handleModeChange = (mode: Mode) => {
-	  setPageReset({ mode: mode === "All" ? null : mode });
+		setPageReset({ mode: mode === "All" ? null : mode });
 	};
 
 	const handleOriginChange = (origin: Origin) => {
-	  setPageReset({ origin: origin === "All" ? null : origin });
+		setPageReset({ origin: origin === "All" ? null : origin });
 	};
 
 	const assignments = data?.assignments ?? [];
@@ -201,34 +201,34 @@ export function AssignmentListPage() {
 					</div>
 					<div className="flex gap-3">
 						<label className="flex flex-col gap-1.5 font-medium text-sm text-surface-300">
-						  Mode
-						  <select
-						    aria-label="Mode"
-						    value={MODES.includes(currentMode) ? currentMode : "All"}
-						    onChange={(e) => handleModeChange(e.target.value as Mode)}
-						    className="rounded-lg border border-surface-700 bg-surface-900 px-3 py-2 text-sm text-surface-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
-						  >
-						    {MODES.map((m) => (
-						      <option key={m} value={m}>
-						        {m === "All" ? "All modes" : m}
-						      </option>
-						    ))}
-						  </select>
+							Mode
+							<select
+								aria-label="Mode"
+								value={MODES.includes(currentMode) ? currentMode : "All"}
+								onChange={(e) => handleModeChange(e.target.value as Mode)}
+								className="rounded-lg border border-surface-700 bg-surface-900 px-3 py-2 text-sm text-surface-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
+							>
+								{MODES.map((m) => (
+									<option key={m} value={m}>
+										{m === "All" ? "All modes" : m}
+									</option>
+								))}
+							</select>
 						</label>
 						<label className="flex flex-col gap-1.5 font-medium text-sm text-surface-300">
-						  Origin
-						  <select
-						    aria-label="Origin"
-						    value={ORIGINS.includes(currentOrigin) ? currentOrigin : "All"}
-						    onChange={(e) => handleOriginChange(e.target.value as Origin)}
-						    className="rounded-lg border border-surface-700 bg-surface-900 px-3 py-2 text-sm text-surface-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
-						  >
-						    {ORIGINS.map((o) => (
-						      <option key={o} value={o}>
-						        {o === "All" ? "All origins" : o}
-						      </option>
-						    ))}
-						  </select>
+							Origin
+							<select
+								aria-label="Origin"
+								value={ORIGINS.includes(currentOrigin) ? currentOrigin : "All"}
+								onChange={(e) => handleOriginChange(e.target.value as Origin)}
+								className="rounded-lg border border-surface-700 bg-surface-900 px-3 py-2 text-sm text-surface-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
+							>
+								{ORIGINS.map((o) => (
+									<option key={o} value={o}>
+										{o === "All" ? "All origins" : o}
+									</option>
+								))}
+							</select>
 						</label>
 						<label className="flex flex-col gap-1.5 font-medium text-sm text-surface-300">
 							Sort by
