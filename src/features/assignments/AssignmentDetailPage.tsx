@@ -23,9 +23,9 @@ function CommunityInfo({ assignment }: { assignment: AssignmentDetail }) {
 		<div className="mt-3 flex items-center gap-3">
 			<Badge variant="success">Community</Badge>
 			{assignment.contributor && (
-			  <span className="text-sm text-surface-400">
-			    by {assignment.contributor}
-			  </span>
+				<span className="text-sm text-surface-400">
+					by {assignment.contributor}
+				</span>
 			)}
 		</div>
 	);
