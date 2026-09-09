@@ -20,8 +20,7 @@ import {
 	executionStarted,
 	resetExecution,
 } from "./executionSlice";
-
-const DEFAULT_SQL = "SELECT * FROM users LIMIT 5;";
+import { initialDoc } from "./initialDoc";
 
 interface SqlEditorProps {
 	assignment: Assignment;
@@ -33,7 +32,7 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 	const editorRef = useRef<HTMLDivElement>(null);
 	const viewRef = useRef<EditorView | null>(null);
 	const [userEdited, setUserEdited] = useState(false);
-	const initialDocRef = useRef(initialSql ?? DEFAULT_SQL);
+	const initialDocRef = useRef(initialDoc(initialSql));
 
 	const { phase, taskId } = useSelector((state: RootState) => state.execution);
 
