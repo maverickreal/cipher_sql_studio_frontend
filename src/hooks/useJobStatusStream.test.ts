@@ -82,24 +82,32 @@ afterEach(() => {
 });
 
 describe("useJobStatusStream", () => {
-	it("dispatches executionCompleted and closes the source on completed", () => {
-		const { store } = setup();
+	it("opens EventSource with withCredentials true and correct stream URL", () => {
+		setup("task-456");
 		expect(FakeEventSource.instances).toHaveLength(1);
 		const source = FakeEventSource.instances[0];
 
-		// withCredentials must stay on (already in hook)
 		expect(FakeEventSource.lastOptions).toEqual({ withCredentials: true });
-		expect(source.url).toContain("/status/task-123/stream");
+		expect(source.url).toContain(
+			"/api/v1/assignments/client-sql-code-run/status/task-456/stream",
+		);
+	});
+
+	it("dispatches executionCompleted and closes stream on job-status completed", () => {
+		const { store } = setup("task-123");
+		const source = FakeEventSource.instances[0];
 
 		const result = {
 			success: true,
 			passed: true,
-			rows: [],
-			columns: [],
-			rowCount: 0,
-			executionTimeMs: 1,
+			rows: [{ col: 1 }],
+			columns: ["col"],
+			rowCount: 1,
+			executionTimeMs: 10,
 		};
-		source.fire("job-status", { status: "completed", result });
+		act(() => {
+			source.fire("job-status", { status: "completed", result });
+		});
 
 		const state = store.getState().execution;
 		expect(state.phase).toBe("done");
@@ -107,35 +115,44 @@ describe("useJobStatusStream", () => {
 		expect(source.close).toHaveBeenCalled();
 	});
 
-	it("dispatches executionFailed on failed", () => {
-		const { store } = setup();
+	it("dispatches executionFailed and closes stream on job-status failed", () => {
+		const { store } = setup("task-123");
 		const source = FakeEventSource.instances[0];
-		source.fire("job-status", {
-			status: "failed",
-			result: { success: false, error: "boom" },
+
+		act(() => {
+			source.fire("job-status", {
+				status: "failed",
+				result: { success: false, error: "Syntax error in SQL" },
+			});
 		});
 
 		const state = store.getState().execution;
 		expect(state.phase).toBe("error");
-		expect(state.error).toBe("boom");
+		expect(state.error).toBe("Syntax error in SQL");
 		expect(source.close).toHaveBeenCalled();
 	});
 
-	it("falls back to 1s polling when EventSource errors", () => {
-		const { store } = setup();
+	it("falls back to 1s polling when EventSource triggers onerror", () => {
+		const { store } = setup("task-123");
 		const source = FakeEventSource.instances[0];
+
 		act(() => {
 			source.triggerError();
 		});
 
 		expect(source.close).toHaveBeenCalled();
-		// Fallback flag flips → hook re-renders with skip=false, pollingInterval=1000
 		const calls = vi.mocked(useGetJobStatusQuery).mock.calls;
 		const lastOptions = calls[calls.length - 1]?.[1] as
 			| { skip?: boolean; pollingInterval?: number }
 			| undefined;
+
 		expect(lastOptions?.skip).toBe(false);
 		expect(lastOptions?.pollingInterval).toBe(1000);
 		expect(store.getState().execution.phase).not.toBe("done");
+	});
+
+	it("does not initiate EventSource when taskId is null", () => {
+		setup(null);
+		expect(FakeEventSource.instances).toHaveLength(0);
 	});
 });

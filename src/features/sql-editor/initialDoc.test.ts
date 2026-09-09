@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_SQL, initialDoc } from "./initialDoc";
 
-describe("initialDoc", () => {
+describe("initialDoc helper", () => {
 	it("uses last-sql userSql when present", () => {
-		// Simulates AssignmentDetailPage mapping: initialSql={lastSql?.userSql ?? null}
 		const lastSql = { userSql: "SELECT 1" };
 		expect(initialDoc(lastSql?.userSql ?? null)).toBe("SELECT 1");
 	});
