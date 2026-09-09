@@ -68,8 +68,8 @@ export function Navbar() {
 						<div className="flex items-center gap-2">
 							{user.role === "admin" && (
 								<Link
-									to="/admin/assignments/new"
-									className={`rounded-lg px-3 py-1.5 font-medium text-sm transition-colors ${isActive("/admin/assignments/new") ? "bg-surface-800 text-white" : "text-amber-400 hover:text-amber-300"}`}
+									to="/admin"
+									className={`rounded-lg px-3 py-1.5 font-medium text-sm transition-colors ${location.pathname.startsWith("/admin") ? "bg-surface-800 text-white" : "text-amber-400 hover:text-amber-300"}`}
 								>
 									Admin
 								</Link>

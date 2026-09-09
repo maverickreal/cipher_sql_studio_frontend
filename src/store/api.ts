@@ -7,6 +7,31 @@ import type {
 	SqlExecutionRequest,
 } from "../types";
 
+export interface AdminAssignmentRow {
+	_id: string;
+	title: string;
+	difficulty: string;
+	mode: string;
+	createdAt: string;
+}
+
+export interface AdminUserRow {
+	id: string;
+	email: string;
+	name: string;
+	role: string;
+}
+
+export interface AdminAuditRow {
+	_id?: string;
+	at: string;
+	actorId: string;
+	action: string;
+	targetType: string;
+	targetId: string;
+	meta?: { from?: string; to?: string };
+}
+
 export const api = createApi({
 	reducerPath: "api",
 
@@ -15,7 +40,7 @@ export const api = createApi({
 		credentials: "include",
 	}),
 
-	tagTypes: ["Assignments", "Assignment"],
+	tagTypes: ["Assignments", "Assignment", "AdminUsers", "AdminAudit"],
 
 	endpoints: (builder) => ({
 		getAssignments: builder.query<
@@ -73,7 +98,33 @@ export const api = createApi({
 				method: "POST",
 				body,
 			}),
-			invalidatesTags: ["Assignments"],
+			invalidatesTags: ["Assignments", "AdminAudit"],
+		}),
+
+		getAdminAssignments: builder.query<{ items: AdminAssignmentRow[] }, void>({
+			query: () => "/api/v1/admin/assignments",
+		}),
+
+		getAdminUsers: builder.query<{ items: AdminUserRow[] }, void>({
+			query: () => "/api/v1/admin/users",
+			providesTags: ["AdminUsers"],
+		}),
+
+		setUserRole: builder.mutation<
+			{ user: AdminUserRow },
+			{ id: string; role: "admin" | "user" }
+		>({
+			query: ({ id, role }) => ({
+				url: `/api/v1/admin/users/${id}/role`,
+				method: "POST",
+				body: { role },
+			}),
+			invalidatesTags: ["AdminUsers", "AdminAudit"],
+		}),
+
+		getAdminAudit: builder.query<{ items: AdminAuditRow[] }, void>({
+			query: () => "/api/v1/admin/audit?limit=50",
+			providesTags: ["AdminAudit"],
 		}),
 	}),
 });
@@ -86,4 +137,8 @@ export const {
 	useGetLastSqlQuery,
 	useSaveLastSqlMutation,
 	useCreateAssignmentMutation,
+	useGetAdminAssignmentsQuery,
+	useGetAdminUsersQuery,
+	useSetUserRoleMutation,
+	useGetAdminAuditQuery,
 } = api;

@@ -35,6 +35,35 @@ const CreateAssignmentPage = () =>
 		loader: m.createAssignmentLoader,
 	}));
 
+const AdminLayout = () =>
+	import("../features/admin/AdminLayout").then((m) => ({
+		Component: m.AdminLayout,
+		loader: m.adminLayoutLoader,
+	}));
+
+const AdminIndexRedirect = () =>
+	import("../features/admin/AdminLayout").then((m) => ({
+		Component: m.AdminIndexRedirect,
+	}));
+
+const AssignmentsAdminPage = () =>
+	import("../features/admin/AssignmentsAdminPage").then((m) => ({
+		Component: m.AssignmentsAdminPage,
+		loader: m.assignmentsAdminLoader,
+	}));
+
+const UsersAdminPage = () =>
+	import("../features/admin/UsersAdminPage").then((m) => ({
+		Component: m.UsersAdminPage,
+		loader: m.usersAdminLoader,
+	}));
+
+const AuditAdminPage = () =>
+	import("../features/admin/AuditAdminPage").then((m) => ({
+		Component: m.AuditAdminPage,
+		loader: m.auditAdminLoader,
+	}));
+
 export const router = createBrowserRouter([
 	{
 		path: "/",
@@ -47,6 +76,16 @@ export const router = createBrowserRouter([
 			{ path: "signup", lazy: SignUpPage },
 			{ path: "assignments", lazy: AssignmentListPage },
 			{ path: "assignments/:id", lazy: AssignmentDetailPage },
+			{
+				path: "admin",
+				lazy: AdminLayout,
+				children: [
+					{ index: true, lazy: AdminIndexRedirect },
+					{ path: "assignments", lazy: AssignmentsAdminPage },
+					{ path: "users", lazy: UsersAdminPage },
+					{ path: "audit", lazy: AuditAdminPage },
+				],
+			},
 			{ path: "admin/assignments/new", lazy: CreateAssignmentPage },
 		],
 	},
