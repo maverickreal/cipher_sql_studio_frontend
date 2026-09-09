@@ -56,7 +56,7 @@ export function UsersAdminPage() {
 		<div>
 			<div className="mb-4 flex items-center justify-between">
 				<h2 className="font-semibold text-lg text-white">
-					Users ({items.length})
+					Users ({data?.total ?? items.length})
 				</h2>
 			</div>
 			{actionError && (

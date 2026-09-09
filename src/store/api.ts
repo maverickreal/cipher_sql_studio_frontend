@@ -7,6 +7,24 @@ import type {
 	SqlExecutionRequest,
 } from "../types";
 
+export interface AssignmentsQueryParams {
+	page?: number;
+	limit?: number;
+	q?: string;
+	difficulty?: string;
+	mode?: string;
+	sort?: "createdAt" | "title";
+	order?: "asc" | "desc";
+}
+
+export interface AssignmentsResponse {
+	assignments: Assignment[];
+	page: number;
+	limit: number;
+	total: number;
+	totalPages: number;
+}
+
 export interface AdminAssignmentRow {
 	_id: string;
 	title: string;
@@ -43,12 +61,27 @@ export const api = createApi({
 	tagTypes: ["Assignments", "Assignment", "AdminUsers", "AdminAudit"],
 
 	endpoints: (builder) => ({
-		getAssignments: builder.query<
-			{ assignments: Assignment[] },
-			{ page?: number; limit?: number }
-		>({
-			query: ({ page = 1, limit = 20 } = {}) =>
-				`/api/v1/assignments?page=${page}&limit=${limit}`,
+		getAssignments: builder.query<AssignmentsResponse, AssignmentsQueryParams>({
+			query: ({
+				page = 1,
+				limit = 20,
+				q,
+				difficulty,
+				mode,
+				sort,
+				order,
+			} = {}) => {
+				const params = new URLSearchParams({
+					page: String(page),
+					limit: String(limit),
+				});
+				if (q?.trim()) params.set("q", q.trim());
+				if (difficulty) params.set("filter[difficulty]", difficulty);
+				if (mode) params.set("filter[mode]", mode);
+				if (sort) params.set("sort", sort);
+				if (order) params.set("order", order);
+				return `/api/v1/assignments?${params.toString()}`;
+			},
 			providesTags: ["Assignments"],
 		}),
 
@@ -101,11 +134,17 @@ export const api = createApi({
 			invalidatesTags: ["Assignments", "AdminAudit"],
 		}),
 
-		getAdminAssignments: builder.query<{ items: AdminAssignmentRow[] }, void>({
+		getAdminAssignments: builder.query<
+			{ items: AdminAssignmentRow[]; total?: number },
+			void
+		>({
 			query: () => "/api/v1/admin/assignments",
 		}),
 
-		getAdminUsers: builder.query<{ items: AdminUserRow[] }, void>({
+		getAdminUsers: builder.query<
+			{ items: AdminUserRow[]; total?: number },
+			void
+		>({
 			query: () => "/api/v1/admin/users",
 			providesTags: ["AdminUsers"],
 		}),
@@ -122,7 +161,10 @@ export const api = createApi({
 			invalidatesTags: ["AdminUsers", "AdminAudit"],
 		}),
 
-		getAdminAudit: builder.query<{ items: AdminAuditRow[] }, void>({
+		getAdminAudit: builder.query<
+			{ items: AdminAuditRow[]; total?: number },
+			void
+		>({
 			query: () => "/api/v1/admin/audit?limit=50",
 			providesTags: ["AdminAudit"],
 		}),

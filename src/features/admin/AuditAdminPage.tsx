@@ -33,7 +33,7 @@ export function AuditAdminPage() {
 		<div>
 			<div className="mb-4 flex items-center justify-between">
 				<h2 className="font-semibold text-lg text-white">
-					Audit ({items.length})
+					Audit ({data?.total ?? items.length})
 				</h2>
 			</div>
 			<div className="overflow-x-auto rounded-lg border border-surface-800">

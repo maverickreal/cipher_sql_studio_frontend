@@ -72,7 +72,9 @@ export function SignInPage() {
 
 				<div className="my-6 flex items-center gap-3" aria-hidden="true">
 					<span className="h-px flex-1 bg-surface-800" />
-					<span className="text-xs text-surface-500">or continue with email</span>
+					<span className="text-surface-500 text-xs">
+						or continue with email
+					</span>
 					<span className="h-px flex-1 bg-surface-800" />
 				</div>
 

@@ -22,7 +22,9 @@ export function SocialSignInButtons() {
 				callbackURL: "/",
 			});
 			if (error) {
-				setError(error.message || `Sign in with ${PROVIDER_LABEL[provider]} failed`);
+				setError(
+					error.message || `Sign in with ${PROVIDER_LABEL[provider]} failed`,
+				);
 				setPending(null);
 			}
 			// On success better-auth redirects to the provider; no further action.
