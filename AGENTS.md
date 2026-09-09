@@ -8,8 +8,9 @@
 | `npm run build` | `tsc -b && vite build` (typecheck first, then bundle) |
 | `npm run health:check` | `biome check .` |
 | `npm run health:fix` | `biome check --write --unsafe .` |
+| `npm test` | `vitest run` (jsdom; hooks + editor helper tests) |
 
-No tests exist (no test framework in dependencies). No CI pipelines.
+No CI pipelines.
 
 ## Dev server
 
@@ -30,7 +31,8 @@ No tests exist (no test framework in dependencies). No CI pipelines.
 - Routes are **lazily loaded** via react-router `lazy` in `src/app/router.tsx`.
 - **Redux store** (`src/store/index.ts`): `auth` slice, `execution` slice, `api` (RTK Query).
 - **RTK Query** base URL from `import.meta.env.VITE_API_BASE_URL`; credentials `"include"` for cookie-based auth.
-- SQL execution is **async with polling**: POST → `taskId` → poll GET `/status/:taskId` every 1s. The `jobStatus` endpoint uses `keepUnusedDataFor: 0`.
+- SQL execution is **EventSource-first**: POST → `taskId` → `useJobStatusStream` opens `EventSource` on `/status/:taskId/stream` (`withCredentials: true`) for `job-status` completed/failed events; on `onerror` (or no EventSource) it falls back to RTK `useGetJobStatusQuery` polling every 1s. The `jobStatus` endpoint uses `keepUnusedDataFor: 0`.
+- Last-SQL restore: `AssignmentDetailPage` passes `initialSql={lastSql?.userSql ?? null}` into `SqlEditor`, resolved via `initialDoc()` helper (`src/features/sql-editor/initialDoc.ts`).
 - Auth via **better-auth** client. `useAuth` hook in `src/hooks/useAuth.ts` dispatches `setUser`/`clearSession`. Called in `RootLayout` and `AssignmentDetailPage`.
 - UI primitives in `src/components/ui/` (`Button`, `Input`, `Textarea`, `Badge`, `Table`). `Button` accepts `loading` prop (shows spinner).
 - Error extraction utility `getErrorMessage` handles RTK Query error shapes.
