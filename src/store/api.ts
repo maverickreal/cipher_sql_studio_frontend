@@ -56,6 +56,19 @@ export interface AdminAuditRow {
 	meta?: { from?: string; to?: string };
 }
 
+export interface LeaderboardEntry {
+	userId: string;
+	displayName: string | null;
+	passes: number;
+	lastPassAt: string;
+}
+
+export interface LeaderboardResponse {
+	entries: LeaderboardEntry[];
+	total: number;
+	generatedAt: string;
+}
+
 export const api = createApi({
 	reducerPath: "api",
 
@@ -70,6 +83,7 @@ export const api = createApi({
 		"AdminUsers",
 		"AdminAudit",
 		"Profile",
+		"Leaderboard",
 	],
 
 	endpoints: (builder) => ({
@@ -212,6 +226,16 @@ export const api = createApi({
 			query: (id) => `/api/v1/profile/${id}`,
 			providesTags: (_r, _e, id) => [{ type: "Profile", id }],
 		}),
+
+		getLeaderboard: builder.query<
+			LeaderboardResponse,
+			{ limit?: number; offset?: number }
+		>({
+			query: ({ limit = 50, offset = 0 } = {}) =>
+				`/api/v1/leaderboard?limit=${limit}&offset=${offset}`,
+			providesTags: ["Leaderboard"],
+			keepUnusedDataFor: 15,
+		}),
 	}),
 });
 
@@ -230,4 +254,5 @@ export const {
 	useGetMyProfileQuery,
 	useUpdateMyProfileMutation,
 	useGetPublicProfileQuery,
+	useGetLeaderboardQuery,
 } = api;

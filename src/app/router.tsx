@@ -76,6 +76,11 @@ const PublicProfilePage = () =>
 		loader: m.publicProfileLoader,
 	}));
 
+const LeaderboardPage = () =>
+	import("../features/leaderboard/LeaderboardPage").then((m) => ({
+		Component: m.LeaderboardPage,
+	}));
+
 export const router = createBrowserRouter([
 	{
 		path: "/",
@@ -90,6 +95,7 @@ export const router = createBrowserRouter([
 			{ path: "assignments/:id", lazy: AssignmentDetailPage },
 			{ path: "profile", lazy: ProfilePage },
 			{ path: "profile/:id", lazy: PublicProfilePage },
+			{ path: "leaderboard", lazy: LeaderboardPage },
 			{
 				path: "admin",
 				lazy: AdminLayout,
