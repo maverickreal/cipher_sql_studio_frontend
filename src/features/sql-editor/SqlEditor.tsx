@@ -35,6 +35,8 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 	const editorRef = useRef<HTMLDivElement>(null);
 	const viewRef = useRef<EditorView | null>(null);
 	const themeCompartment = useRef(new Compartment());
+	const themeRef = useRef(theme);
+	themeRef.current = theme;
 	const [userEdited, setUserEdited] = useState(false);
 	const initialDocRef = useRef(initialDoc(initialSql));
 
@@ -62,7 +64,7 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 				history(),
 				keymap.of([...defaultKeymap, ...historyKeymap]),
 				sql({ dialect: PostgreSQL }),
-				themeCompartment.current.of(sqlEditorTheme(theme)),
+				themeCompartment.current.of(sqlEditorTheme(themeRef.current)),
 				updateListener,
 			],
 			parent: editorRef.current,
@@ -74,7 +76,7 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 			view.destroy();
 			viewRef.current = null;
 		};
-	}, [theme]);
+	}, []);
 
 	useEffect(() => {
 		const view = viewRef.current;

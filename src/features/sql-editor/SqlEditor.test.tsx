@@ -1,9 +1,12 @@
+import { EditorView } from "@codemirror/view";
 import { configureStore } from "@reduxjs/toolkit";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { api } from "../../store/api";
+import { ThemeProvider } from "../../theme/ThemeProvider";
+import { ThemeToggle } from "../../theme/ThemeToggle";
 import authReducer from "../auth/authSlice";
 import executionReducer from "./executionSlice";
 import { SqlEditor } from "./SqlEditor";
@@ -58,14 +61,17 @@ function renderEditor() {
 	const store = createTestStore();
 	return render(
 		<Provider store={store}>
-			<MemoryRouter initialEntries={["/assignments/a1"]}>
-				<Routes>
-					<Route
-						path="/assignments/:id"
-						element={<SqlEditor assignment={mockAssignment} />}
-					/>
-				</Routes>
-			</MemoryRouter>
+			<ThemeProvider>
+				<ThemeToggle />
+				<MemoryRouter initialEntries={["/assignments/a1"]}>
+					<Routes>
+						<Route
+							path="/assignments/:id"
+							element={<SqlEditor assignment={mockAssignment} />}
+						/>
+					</Routes>
+				</MemoryRouter>
+			</ThemeProvider>
 		</Provider>,
 	);
 }
@@ -73,6 +79,9 @@ function renderEditor() {
 describe("SqlEditor", () => {
 	afterEach(() => {
 		cleanup();
+		localStorage.clear();
+		document.documentElement.className = "";
+		delete document.documentElement.dataset.theme;
 	});
 
 	it("renders SQL editor with assignment title and mode", () => {
@@ -97,5 +106,24 @@ describe("SqlEditor", () => {
 		const host = document.querySelector(".cm-editor-container");
 		expect(host).toBeTruthy();
 		expect(host?.className).toContain("min-h-[280px]");
+	});
+
+	it("keeps typed SQL when the theme toggle fires", () => {
+		renderEditor();
+		const host = document.querySelector(".cm-editor-container");
+		expect(host).toBeTruthy();
+		const view = EditorView.findFromDOM(host as HTMLElement);
+		expect(view).toBeTruthy();
+		const sql = "SELECT 42 AS keep_me;";
+		view?.dispatch({
+			changes: { from: 0, to: view.state.doc.length, insert: sql },
+		});
+		fireEvent.click(
+			screen.getByRole("button", { name: "Switch to light theme" }),
+		);
+		expect(document.documentElement.dataset.theme).toBe("alucard");
+		const after = EditorView.findFromDOM(host as HTMLElement);
+		expect(after).toBe(view);
+		expect(after?.state.doc.toString()).toBe(sql);
 	});
 });
