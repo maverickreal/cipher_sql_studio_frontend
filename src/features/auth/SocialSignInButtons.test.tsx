@@ -23,12 +23,10 @@ function renderButtons() {
 describe("SocialSignInButtons", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubGlobal("location", { ...window.location, reload: vi.fn() });
   });
 
   afterEach(() => {
     cleanup();
-    vi.unstubAllGlobals();
   });
 
   it("renders Google and GitHub sign-in buttons", () => {
@@ -36,6 +34,12 @@ describe("SocialSignInButtons", () => {
 
     expect(screen.getByRole("button", { name: "Continue with Google" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Continue with GitHub" })).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Continue with Google" }).querySelector("svg"),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Continue with GitHub" }).querySelector("svg"),
+    ).toBeTruthy();
   });
 
   it("calls authClient.signIn.social when Google button clicked", async () => {
@@ -51,7 +55,7 @@ describe("SocialSignInButtons", () => {
     await waitFor(() => {
       expect(authClient.signIn.social).toHaveBeenCalledWith({
         provider: "google",
-        callbackURL: "/",
+        callbackURL: `${window.location.origin}/`,
       });
     });
   });
@@ -69,7 +73,7 @@ describe("SocialSignInButtons", () => {
     await waitFor(() => {
       expect(authClient.signIn.social).toHaveBeenCalledWith({
         provider: "github",
-        callbackURL: "/",
+        callbackURL: `${window.location.origin}/`,
       });
     });
   });

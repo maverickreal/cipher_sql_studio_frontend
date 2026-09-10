@@ -82,4 +82,11 @@ describe("SqlEditor", () => {
     expect(runButton).toBeTruthy();
     expect(runButton.disabled).toBe(false);
   });
+
+  it("gives the empty editor a 280px min height", () => {
+    renderEditor();
+    const host = document.querySelector(".cm-editor-container");
+    expect(host).toBeTruthy();
+    expect(host?.className).toContain("min-h-[280px]");
+  });
 });

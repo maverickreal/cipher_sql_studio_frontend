@@ -48,11 +48,13 @@ export function LandingPage() {
 					<Link to="/assignments">
 						<Button size="lg">Browse Assignments</Button>
 					</Link>
-					<Link to="/signup">
-						<Button variant="secondary" size="lg">
-							Create Free Account
-						</Button>
-					</Link>
+					{showSignup && (
+						<Link to="/signup">
+							<Button variant="secondary" size="lg">
+								Create Free Account
+							</Button>
+						</Link>
+					)}
 				</motion.div>
 
 				<motion.div

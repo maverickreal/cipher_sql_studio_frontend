@@ -135,4 +135,36 @@ describe("AssignmentDetailPage community info", () => {
 
 		expect(screen.queryByText("Community")).toBeNull();
 	});
+
+	it("renders markdown in description and sample I/O instead of raw source", () => {
+		const assignment: AssignmentDetail = {
+			...baseAssignment,
+			description: "Join **customers** with orders.\n\n```sql\nSELECT 1;\n```",
+			sampleInput: [
+				"| name | total |\n| --- | --- |\n| Alice | 150 |",
+			],
+			sampleOutput: "| name |\n| --- |\n| Alice |",
+		};
+		vi.mocked(useGetAssignmentByIdQuery).mockReturnValue({
+			data: { assignment },
+			isLoading: false,
+			isError: false,
+			error: undefined,
+			refetch: vi.fn(),
+		} as unknown as ReturnType<typeof useGetAssignmentByIdQuery>);
+		vi.mocked(useGetLastSqlQuery).mockReturnValue({
+			data: undefined,
+			isLoading: false,
+			isError: false,
+			error: undefined,
+			refetch: vi.fn(),
+		} as unknown as ReturnType<typeof useGetLastSqlQuery>);
+
+		renderDetailPage("a1");
+
+		expect(screen.queryByText(/\*\*customers\*\*/)).toBeNull();
+		expect(screen.getByText("customers").tagName).toBe("STRONG");
+		expect(document.querySelectorAll("table").length).toBeGreaterThan(0);
+		expect(document.querySelector("pre")).toBeTruthy();
+	});
 });

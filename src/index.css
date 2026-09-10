@@ -38,4 +38,13 @@
 	* {
 		@apply border-surface-800;
 	}
+
+	a,
+	button:not(:disabled) {
+		cursor: pointer;
+	}
+
+	button:disabled {
+		cursor: not-allowed;
+	}
 }

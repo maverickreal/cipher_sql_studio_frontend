@@ -4,6 +4,7 @@ import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { PageTransition } from "../../components/PageTransition";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
+import { MarkdownContent } from "../../components/MarkdownContent";
 import { useAuth } from "../../hooks/useAuth";
 import type { RootState } from "../../store";
 import { useGetAssignmentByIdQuery, useGetLastSqlQuery } from "../../store/api";
@@ -91,9 +92,9 @@ export function AssignmentDetailPage() {
 						</div>
 
 						<div className="mt-6 rounded-lg border border-surface-800 bg-surface-900/50 p-4">
-							<p className="whitespace-pre-wrap text-sm text-surface-300">
+							<MarkdownContent className="text-sm text-surface-300">
 								{data.assignment.description}
-							</p>
+							</MarkdownContent>
 						</div>
 
 						{data.assignment.sampleInput.length > 0 && (
@@ -102,9 +103,9 @@ export function AssignmentDetailPage() {
 									Sample Input
 								</h3>
 								<div className="mt-1 rounded-lg border border-surface-800 bg-surface-950 p-3">
-									<p className="whitespace-pre-wrap font-mono text-sm text-surface-400">
+									<MarkdownContent className="font-mono text-sm text-surface-400">
 										{data.assignment.sampleInput.join("\n")}
-									</p>
+									</MarkdownContent>
 								</div>
 							</div>
 						)}
@@ -115,9 +116,9 @@ export function AssignmentDetailPage() {
 									Expected Output
 								</h3>
 								<div className="mt-1 rounded-lg border border-surface-800 bg-surface-950 p-3">
-									<p className="whitespace-pre-wrap font-mono text-sm text-surface-400">
+									<MarkdownContent className="font-mono text-sm text-surface-400">
 										{data.assignment.sampleOutput}
-									</p>
+									</MarkdownContent>
 								</div>
 							</div>
 						)}

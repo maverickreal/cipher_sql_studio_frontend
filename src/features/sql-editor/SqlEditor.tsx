@@ -64,6 +64,7 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 					"&": {
 						fontSize: "14px",
 						borderRadius: "0.5rem",
+						minHeight: "280px",
 					},
 					".cm-scroller": {
 						fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
@@ -130,7 +131,7 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 						{assignment.mode === "read" ? "Read only" : "Read/Write"}
 					</span>
 				</div>
-				<div ref={editorRef} className="cm-editor-container" />
+				<div ref={editorRef} className="cm-editor-container min-h-[280px]" />
 			</div>
 
 			<div className="flex items-center gap-3">
