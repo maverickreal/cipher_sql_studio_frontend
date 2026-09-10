@@ -1,6 +1,6 @@
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { PostgreSQL, sql } from "@codemirror/lang-sql";
-import { oneDark } from "@codemirror/theme-one-dark";
+import { Compartment } from "@codemirror/state";
 import {
 	EditorView,
 	highlightActiveLine,
@@ -13,6 +13,8 @@ import { Button } from "../../components/ui/Button";
 import { useJobStatusStream } from "../../hooks/useJobStatusStream";
 import type { AppDispatch, RootState } from "../../store";
 import { useExecuteSqlMutation, useSaveLastSqlMutation } from "../../store/api";
+import { sqlEditorTheme } from "../../theme/codemirror";
+import { useTheme } from "../../theme/ThemeProvider";
 import type { Assignment } from "../../types";
 import { getErrorMessage } from "../../utils/errors";
 import {
@@ -29,8 +31,10 @@ interface SqlEditorProps {
 
 export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 	const dispatch = useDispatch<AppDispatch>();
+	const { theme } = useTheme();
 	const editorRef = useRef<HTMLDivElement>(null);
 	const viewRef = useRef<EditorView | null>(null);
+	const themeCompartment = useRef(new Compartment());
 	const [userEdited, setUserEdited] = useState(false);
 	const initialDocRef = useRef(initialDoc(initialSql));
 
@@ -58,18 +62,8 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 				history(),
 				keymap.of([...defaultKeymap, ...historyKeymap]),
 				sql({ dialect: PostgreSQL }),
-				oneDark,
+				themeCompartment.current.of(sqlEditorTheme(theme)),
 				updateListener,
-				EditorView.theme({
-					"&": {
-						fontSize: "14px",
-						borderRadius: "0.5rem",
-						minHeight: "280px",
-					},
-					".cm-scroller": {
-						fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-					},
-				}),
 			],
 			parent: editorRef.current,
 		});
@@ -80,7 +74,15 @@ export function SqlEditor({ assignment, initialSql }: SqlEditorProps) {
 			view.destroy();
 			viewRef.current = null;
 		};
-	}, []);
+	}, [theme]);
+
+	useEffect(() => {
+		const view = viewRef.current;
+		if (!view) return;
+		view.dispatch({
+			effects: themeCompartment.current.reconfigure(sqlEditorTheme(theme)),
+		});
+	}, [theme]);
 
 	useEffect(() => {
 		const view = viewRef.current;

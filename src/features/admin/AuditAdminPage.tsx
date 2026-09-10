@@ -32,7 +32,7 @@ export function AuditAdminPage() {
 	return (
 		<div>
 			<div className="mb-4 flex items-center justify-between">
-				<h2 className="font-semibold text-lg text-white">
+				<h2 className="font-semibold text-fg text-lg">
 					Audit ({data?.total ?? items.length})
 				</h2>
 			</div>

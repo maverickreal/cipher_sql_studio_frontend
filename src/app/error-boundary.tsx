@@ -23,7 +23,7 @@ export function ErrorBoundary() {
 	return (
 		<div className="flex min-h-screen items-center justify-center px-4">
 			<div className="text-center">
-				<h1 className="font-bold text-4xl text-white">{title}</h1>
+				<h1 className="font-bold text-4xl text-fg">{title}</h1>
 				<p className="mt-3 text-surface-400">{message}</p>
 				<div className="mt-6 flex items-center justify-center gap-3">
 					<Link to="/">

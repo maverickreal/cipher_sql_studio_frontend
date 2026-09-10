@@ -61,7 +61,7 @@ export function SignInPage() {
 				animate={{ opacity: 1, y: 0 }}
 				className="w-full max-w-sm"
 			>
-				<h1 className="font-bold text-2xl text-white">Sign In</h1>
+				<h1 className="font-bold text-2xl text-fg">Sign In</h1>
 				<p className="mt-1 text-sm text-surface-400">
 					Welcome back to M SQL Studio
 				</p>

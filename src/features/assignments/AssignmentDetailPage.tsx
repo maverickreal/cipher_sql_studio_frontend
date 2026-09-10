@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { MarkdownContent } from "../../components/MarkdownContent";
 import { PageTransition } from "../../components/PageTransition";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
-import { MarkdownContent } from "../../components/MarkdownContent";
 import { useAuth } from "../../hooks/useAuth";
 import type { RootState } from "../../store";
 import { useGetAssignmentByIdQuery, useGetLastSqlQuery } from "../../store/api";
@@ -72,7 +72,7 @@ export function AssignmentDetailPage() {
 					<>
 						<div className="flex items-start justify-between gap-4">
 							<div>
-								<h1 className="font-bold text-2xl text-white">
+								<h1 className="font-bold text-2xl text-fg">
 									{data.assignment.title}
 								</h1>
 								<div className="mt-2 flex items-center gap-2">
@@ -127,7 +127,7 @@ export function AssignmentDetailPage() {
 							<LoadingSpinner className="mt-8" />
 						) : user ? (
 							<div className="mt-8">
-								<h2 className="mb-4 font-semibold text-lg text-white">
+								<h2 className="mb-4 font-semibold text-fg text-lg">
 									Your Solution
 								</h2>
 								<SqlEditor

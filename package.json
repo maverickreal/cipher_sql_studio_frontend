@@ -13,7 +13,6 @@
 	},
 	"dependencies": {
 		"@codemirror/lang-sql": "^6.9.0",
-		"@codemirror/theme-one-dark": "^6.1.2",
 		"@reduxjs/toolkit": "^2.8.2",
 		"better-auth": "^1.6.11",
 		"codemirror": "^6.0.2",

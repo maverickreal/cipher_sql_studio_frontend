@@ -28,7 +28,7 @@ export function LandingPage() {
 						</span>
 						Interactive SQL Learning
 					</div>
-					<h1 className="font-bold text-4xl text-white tracking-tight sm:text-6xl">
+					<h1 className="font-bold text-4xl text-fg tracking-tight sm:text-6xl">
 						Master SQL with
 						<span className="block bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">
 							{APP_NAME}
@@ -90,7 +90,7 @@ export function LandingPage() {
 							<div className="mb-4 inline-flex rounded-lg bg-brand-500/10 p-2 text-brand-400">
 								<feature.icon aria-hidden="true" className="h-6 w-6" />
 							</div>
-							<h3 className="font-semibold text-base text-white">
+							<h3 className="font-semibold text-base text-fg">
 								{feature.title}
 							</h3>
 							<p className="mt-2 text-sm text-surface-400">

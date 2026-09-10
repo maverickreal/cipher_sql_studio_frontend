@@ -9,84 +9,93 @@ import executionReducer from "./executionSlice";
 import { SqlEditor } from "./SqlEditor";
 
 vi.mock("../../store/api", async (importOriginal) => {
-  const mod = await (importOriginal as () => Promise<typeof import("../../store/api")>)();
-  return {
-    ...mod,
-    useExecuteSqlMutation: vi.fn(() => [
-      vi.fn().mockResolvedValue({ unwrap: vi.fn().mockResolvedValue({ taskId: "task-123" }) }),
-      { isLoading: false },
-    ]),
-    useSaveLastSqlMutation: vi.fn(() => [
-      vi.fn().mockResolvedValue({ unwrap: vi.fn().mockResolvedValue({}) }),
-    ]),
-  };
+	const mod = await (
+		importOriginal as () => Promise<typeof import("../../store/api")>
+	)();
+	return {
+		...mod,
+		useExecuteSqlMutation: vi.fn(() => [
+			vi.fn().mockResolvedValue({
+				unwrap: vi.fn().mockResolvedValue({ taskId: "task-123" }),
+			}),
+			{ isLoading: false },
+		]),
+		useSaveLastSqlMutation: vi.fn(() => [
+			vi.fn().mockResolvedValue({ unwrap: vi.fn().mockResolvedValue({}) }),
+		]),
+	};
 });
 
 vi.mock("../../hooks/useJobStatusStream", () => ({
-  useJobStatusStream: vi.fn(),
+	useJobStatusStream: vi.fn(),
 }));
 
 function createTestStore() {
-  return configureStore({
-    reducer: {
-      [api.reducerPath]: api.reducer,
-      auth: authReducer,
-      execution: executionReducer,
-    },
-    middleware: (getDefault) => getDefault().concat(api.middleware),
-  });
+	return configureStore({
+		reducer: {
+			[api.reducerPath]: api.reducer,
+			auth: authReducer,
+			execution: executionReducer,
+		},
+		middleware: (getDefault) => getDefault().concat(api.middleware),
+	});
 }
 
 const mockAssignment = {
-  _id: "a1",
-  title: "Test Assignment",
-  description: "Test description",
-  difficulty: "easy" as const,
-  mode: "read" as const,
-  sampleInput: [],
-  sampleOutput: "",
-  pgSchemaReady: true,
-  createdAt: "2026-01-01T00:00:00.000Z",
-  updatedAt: "2026-01-01T00:00:00.000Z",
+	_id: "a1",
+	title: "Test Assignment",
+	description: "Test description",
+	difficulty: "easy" as const,
+	mode: "read" as const,
+	sampleInput: [],
+	sampleOutput: "",
+	pgSchemaReady: true,
+	createdAt: "2026-01-01T00:00:00.000Z",
+	updatedAt: "2026-01-01T00:00:00.000Z",
 };
 
 function renderEditor() {
-  const store = createTestStore();
-  return render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={["/assignments/a1"]}>
-        <Routes>
-          <Route path="/assignments/:id" element={<SqlEditor assignment={mockAssignment} />} />
-        </Routes>
-      </MemoryRouter>
-    </Provider>,
-  );
+	const store = createTestStore();
+	return render(
+		<Provider store={store}>
+			<MemoryRouter initialEntries={["/assignments/a1"]}>
+				<Routes>
+					<Route
+						path="/assignments/:id"
+						element={<SqlEditor assignment={mockAssignment} />}
+					/>
+				</Routes>
+			</MemoryRouter>
+		</Provider>,
+	);
 }
 
 describe("SqlEditor", () => {
-  afterEach(() => {
-    cleanup();
-  });
+	afterEach(() => {
+		cleanup();
+	});
 
-  it("renders SQL editor with assignment title and mode", () => {
-    renderEditor();
+	it("renders SQL editor with assignment title and mode", () => {
+		renderEditor();
 
-    expect(screen.getByText("SQL Editor")).toBeTruthy();
-    expect(screen.getByText("PostgreSQL \u00b7 Read only")).toBeTruthy();
-  });
+		expect(screen.getByText("SQL Editor")).toBeTruthy();
+		expect(screen.getByText("PostgreSQL \u00b7 Read only")).toBeTruthy();
+	});
 
-  it("renders Run Query button", () => {
-    renderEditor();
+	it("renders Run Query button", () => {
+		renderEditor();
 
-    const runButton = screen.getByRole("button", { name: "Run Query" }) as HTMLButtonElement;
-    expect(runButton).toBeTruthy();
-    expect(runButton.disabled).toBe(false);
-  });
+		const runButton = screen.getByRole("button", {
+			name: "Run Query",
+		}) as HTMLButtonElement;
+		expect(runButton).toBeTruthy();
+		expect(runButton.disabled).toBe(false);
+	});
 
-  it("gives the empty editor a 280px min height", () => {
-    renderEditor();
-    const host = document.querySelector(".cm-editor-container");
-    expect(host).toBeTruthy();
-    expect(host?.className).toContain("min-h-[280px]");
-  });
+	it("gives the empty editor a 280px min height", () => {
+		renderEditor();
+		const host = document.querySelector(".cm-editor-container");
+		expect(host).toBeTruthy();
+		expect(host?.className).toContain("min-h-[280px]");
+	});
 });

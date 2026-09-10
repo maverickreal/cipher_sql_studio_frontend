@@ -52,13 +52,13 @@ function DifficultyGauge({
 	const getTrackColor = () => {
 		switch (current) {
 			case "Easy":
-				return "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]";
+				return "bg-emerald-500 shadow-[0_0_15px_color-mix(in_srgb,var(--theme-green)_55%,transparent)]";
 			case "Medium":
-				return "bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.5)]";
+				return "bg-amber-500 shadow-[0_0_15px_color-mix(in_srgb,var(--theme-orange)_55%,transparent)]";
 			case "Hard":
-				return "bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.5)]";
+				return "bg-rose-500 shadow-[0_0_15px_color-mix(in_srgb,var(--theme-pink)_55%,transparent)]";
 			default:
-				return "bg-surface-700 shadow-[0_0_15px_rgba(63,63,70,0.5)]";
+				return "bg-surface-700 shadow-[0_0_15px_color-mix(in_srgb,var(--theme-comment)_40%,transparent)]";
 		}
 	};
 
@@ -94,7 +94,7 @@ function DifficultyGauge({
 						>
 							<motion.span
 								className={`block text-center font-medium text-sm transition-colors duration-300 ${
-									isCoveredByFill ? "text-white" : "text-surface-400"
+									isCoveredByFill ? "text-on-accent" : "text-surface-400"
 								}`}
 								animate={{
 									scale: isActive ? 1.15 : 1,
@@ -177,7 +177,7 @@ export function AssignmentListPage() {
 		<PageTransition>
 			<div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
 				<div className="mb-10 text-center">
-					<h1 className="font-bold text-3xl text-white">Assignments</h1>
+					<h1 className="font-bold text-3xl text-fg">Assignments</h1>
 					<p className="mt-2 text-surface-400">
 						Practice SQL with real-world scenarios
 					</p>

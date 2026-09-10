@@ -33,12 +33,12 @@ export function AssignmentsAdminPage() {
 	return (
 		<div>
 			<div className="mb-4 flex items-center justify-between">
-				<h2 className="font-semibold text-lg text-white">
+				<h2 className="font-semibold text-fg text-lg">
 					Assignments ({data?.total ?? items.length})
 				</h2>
 				<Link
 					to="/admin/assignments/new"
-					className="rounded-lg bg-brand-500 px-3 py-1.5 font-medium text-sm text-white transition-colors hover:bg-brand-400"
+					className="rounded-lg bg-brand-500 px-3 py-1.5 font-medium text-on-accent text-sm transition-colors hover:bg-brand-400"
 				>
 					New assignment
 				</Link>

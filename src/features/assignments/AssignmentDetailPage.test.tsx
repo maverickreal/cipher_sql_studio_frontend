@@ -140,9 +140,7 @@ describe("AssignmentDetailPage community info", () => {
 		const assignment: AssignmentDetail = {
 			...baseAssignment,
 			description: "Join **customers** with orders.\n\n```sql\nSELECT 1;\n```",
-			sampleInput: [
-				"| name | total |\n| --- | --- |\n| Alice | 150 |",
-			],
+			sampleInput: ["| name | total |\n| --- | --- |\n| Alice | 150 |"],
 			sampleOutput: "| name |\n| --- |\n| Alice |",
 		};
 		vi.mocked(useGetAssignmentByIdQuery).mockReturnValue({

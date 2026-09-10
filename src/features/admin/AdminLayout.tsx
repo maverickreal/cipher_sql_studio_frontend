@@ -34,7 +34,7 @@ export function AdminLayout() {
 			<Link
 				key={to}
 				to={to}
-				className={`rounded-lg px-3 py-1.5 font-medium text-sm transition-colors ${active ? "bg-surface-800 text-white" : "text-surface-400 hover:bg-surface-800/50 hover:text-surface-200"}`}
+				className={`rounded-lg px-3 py-1.5 font-medium text-sm transition-colors ${active ? "bg-surface-800 text-fg" : "text-surface-400 hover:bg-surface-800/50 hover:text-surface-200"}`}
 			>
 				{label}
 			</Link>
@@ -44,7 +44,7 @@ export function AdminLayout() {
 	return (
 		<PageTransition>
 			<div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-				<h1 className="font-bold text-2xl text-white">Admin</h1>
+				<h1 className="font-bold text-2xl text-fg">Admin</h1>
 				<nav className="mt-4 flex items-center gap-1">
 					{tab("/admin/assignments", "Assignments")}
 					{tab("/admin/users", "Users")}

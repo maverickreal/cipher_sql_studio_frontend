@@ -10,7 +10,10 @@ function renderInline(text: string): ReactNode[] {
 		}
 		if (part.startsWith("`") && part.endsWith("`") && part.length >= 2) {
 			return (
-				<code key={key} className="rounded bg-surface-900 px-1 font-mono text-sm">
+				<code
+					key={key}
+					className="rounded bg-surface-900 px-1 font-mono text-sm"
+				>
 					{part.slice(1, -1)}
 				</code>
 			);
@@ -103,7 +106,11 @@ function parseBlocks(markdown: string): ReactNode[] {
 			continue;
 		}
 
-		if (line.includes("|") && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+		if (
+			line.includes("|") &&
+			i + 1 < lines.length &&
+			isTableSeparator(lines[i + 1])
+		) {
 			flushPara();
 			const tableLines = [line, lines[i + 1]];
 			i += 2;

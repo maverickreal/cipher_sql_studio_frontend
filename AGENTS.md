@@ -21,13 +21,13 @@ No CI pipelines.
 
 - **Biome 2.5** = linter + formatter (no ESLint/Prettier). Config in `biome.json`.
   - `tab` indent, double quotes, `organizeImports` on save.
-- **Tailwind CSS 4** via `@tailwindcss/vite` plugin. Uses `@import "tailwindcss"` (no PostCSS config needed, no `@tailwind` directives). `@theme` block in `src/index.css` defines `brand-*` and `surface-*` color tokens.
+- **Tailwind CSS 4** via `@tailwindcss/vite` plugin. Uses `@import "tailwindcss"` (no PostCSS config needed, no `@tailwind` directives). `@theme` in `src/index.css` maps `brand-*` / `surface-*` / functional colors to Dracula (dark, default) and Alucard (light) CSS variables. Toggle lives in the navbar (`src/theme/`).
 - **TypeScript** strict mode with `noUnusedLocals` and `noUnusedParameters`. Path alias `@/*` → `./src/*`.
 
 ## Architecture
 
 - React 19 + React Router 7 + Redux Toolkit (RTK Query).
-- `src/main.tsx` entry: wraps `<Provider store={store}>` + `<RouterProvider router={router}>`.
+- `src/main.tsx` entry: wraps `<Provider store={store}>` + `<ThemeProvider>` + `<RouterProvider router={router}>`.
 - Routes are **lazily loaded** via react-router `lazy` in `src/app/router.tsx`.
 - **Redux store** (`src/store/index.ts`): `auth` slice, `execution` slice, `api` (RTK Query).
 - **RTK Query** base URL from `import.meta.env.VITE_API_BASE_URL`; credentials `"include"` for cookie-based auth.

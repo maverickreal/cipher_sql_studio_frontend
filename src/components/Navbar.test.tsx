@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import authReducer from "../features/auth/authSlice";
 import { api } from "../store/api";
+import { ThemeProvider } from "../theme/ThemeProvider";
 import { Navbar } from "./Navbar";
 
 vi.mock("../services/authClient", () => ({
@@ -12,7 +13,9 @@ vi.mock("../services/authClient", () => ({
 }));
 
 vi.mock("../store/api", async (importOriginal) => {
-	const mod = await (importOriginal as () => Promise<typeof import("../store/api")>)();
+	const mod = await (
+		importOriginal as () => Promise<typeof import("../store/api")>
+	)();
 	return {
 		...mod,
 		useGetMyProfileQuery: vi.fn(() => ({
@@ -43,31 +46,40 @@ function renderNavbar(
 	});
 	return render(
 		<Provider store={store}>
-			<MemoryRouter>
-				<Navbar />
-			</MemoryRouter>
+			<ThemeProvider>
+				<MemoryRouter>
+					<Navbar />
+				</MemoryRouter>
+			</ThemeProvider>
 		</Provider>,
 	);
 }
 
 describe("Navbar", () => {
-  afterEach(() => {
-    cleanup();
-  });
+	afterEach(() => {
+		cleanup();
+	});
 
-  it("shows Get Started when signed out", () => {
-    renderNavbar(null);
-    expect(screen.getByText("Get Started")).toBeTruthy();
-  });
+	it("shows Get Started when signed out", () => {
+		renderNavbar(null);
+		expect(screen.getByText("Get Started")).toBeTruthy();
+	});
 
-  it("hides Get Started when signed in", () => {
-    renderNavbar({
-      id: "u1",
-      email: "a@b.c",
-      name: "Ada",
-      role: "user",
-      image: null,
-    });
-    expect(screen.queryByText("Get Started")).toBeNull();
-  });
+	it("hides Get Started when signed in", () => {
+		renderNavbar({
+			id: "u1",
+			email: "a@b.c",
+			name: "Ada",
+			role: "user",
+			image: null,
+		});
+		expect(screen.queryByText("Get Started")).toBeNull();
+	});
+
+	it("exposes a theme toggle", () => {
+		renderNavbar(null);
+		expect(
+			screen.getByRole("button", { name: /switch to (light|dark) theme/i }),
+		).toBeTruthy();
+	});
 });

@@ -104,7 +104,7 @@ export function CreateAssignmentPage() {
 	return (
 		<PageTransition>
 			<div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-				<h1 className="font-bold text-2xl text-white">Create Assignment</h1>
+				<h1 className="font-bold text-2xl text-fg">Create Assignment</h1>
 				<p className="mt-1 text-sm text-surface-400">
 					Add a new SQL assignment for students
 				</p>

@@ -31,7 +31,7 @@ export function AssignmentCard({
 				}`}
 			>
 				<div className="flex items-start justify-between gap-3">
-					<h3 className="font-semibold text-sm text-white transition-colors group-hover:text-brand-400">
+					<h3 className="font-semibold text-fg text-sm transition-colors group-hover:text-brand-400">
 						{assignment.title}
 					</h3>
 					<div className="flex gap-1">

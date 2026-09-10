@@ -64,7 +64,7 @@ export function SignUpPage() {
 				animate={{ opacity: 1, y: 0 }}
 				className="w-full max-w-sm"
 			>
-				<h1 className="font-bold text-2xl text-white">Create Account</h1>
+				<h1 className="font-bold text-2xl text-fg">Create Account</h1>
 				<p className="mt-1 text-sm text-surface-400">
 					Start your SQL learning journey
 				</p>
