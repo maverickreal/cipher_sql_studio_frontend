@@ -88,7 +88,7 @@ describe("SqlEditor", () => {
 		renderEditor();
 
 		expect(screen.getByText("SQL Editor")).toBeTruthy();
-		expect(screen.getByText("PostgreSQL \u00b7 Read only")).toBeTruthy();
+		expect(screen.getByText("PostgreSQL · Read only")).toBeTruthy();
 	});
 
 	it("renders Run Query button", () => {
@@ -117,7 +117,9 @@ describe("SqlEditor", () => {
 		const sql = "SELECT 42 AS keep_me;";
 		view?.dispatch({
 			changes: { from: 0, to: view.state.doc.length, insert: sql },
+			selection: { anchor: 7 },
 		});
+		const head = view?.state.selection.main.head;
 		fireEvent.click(
 			screen.getByRole("button", { name: "Switch to light theme" }),
 		);
@@ -125,5 +127,6 @@ describe("SqlEditor", () => {
 		const after = EditorView.findFromDOM(host as HTMLElement);
 		expect(after).toBe(view);
 		expect(after?.state.doc.toString()).toBe(sql);
+		expect(after?.state.selection.main.head).toBe(head);
 	});
 });
